@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BannerCardWidget extends StatelessWidget {
-  final String? imageAsset; // masalan "assets/banner-taxi.png"
+  final String? imageAsset;
   final Color bgColor;
   final String? badge;
   final String title;
@@ -9,6 +9,7 @@ class BannerCardWidget extends StatelessWidget {
   final String buttonText;
   final bool dark;
   final VoidCallback? onPressed;
+  final VoidCallback? onTapWhole;
 
   const BannerCardWidget({
     super.key,
@@ -20,6 +21,7 @@ class BannerCardWidget extends StatelessWidget {
     this.buttonText = "Buyurtma berish",
     this.dark = false,
     this.onPressed,
+    this.onTapWhole,
   });
 
   @override
@@ -45,10 +47,7 @@ class BannerCardWidget extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Text(
-                    title,
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: textColor),
-                  ),
+                  Text(title, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: textColor)),
                   if (badge != null) ...[
                     const SizedBox(width: 8),
                     Container(
@@ -57,10 +56,8 @@ class BannerCardWidget extends StatelessWidget {
                         color: const Color(0xFFFFC800),
                         borderRadius: BorderRadius.circular(6),
                       ),
-                      child: const Text(
-                        "PREMIUM",
-                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF1B1B1B)),
-                      ),
+                      child: const Text("PREMIUM",
+                          style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF1B1B1B))),
                     ),
                   ],
                 ],
@@ -93,7 +90,10 @@ class BannerCardWidget extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
-      child: ClipRRect(borderRadius: BorderRadius.circular(18), child: content),
+      child: GestureDetector(
+        onTap: onTapWhole,
+        child: ClipRRect(borderRadius: BorderRadius.circular(18), child: content),
+      ),
     );
   }
 }

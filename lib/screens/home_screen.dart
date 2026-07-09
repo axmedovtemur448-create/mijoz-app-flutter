@@ -3,6 +3,7 @@ import '../data/services.dart';
 import '../widgets/service_item.dart';
 import '../widgets/banner_card.dart';
 import 'services_screen.dart';
+import 'taxi_order_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -15,13 +16,16 @@ class HomeScreen extends StatelessWidget {
       Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ServicesScreen()));
     }
 
+    void goToTaxiOrder() {
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => const TaxiOrderScreen()));
+    }
+
     return SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -38,23 +42,14 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Bannerlar
             BannerCardWidget(
               imageAsset: "assets/banner-taxi.png",
               title: "Taksi",
               subtitle: "Tez va qulay\nxizmat",
-              onPressed: goToServices,
-            ),
-            BannerCardWidget(
-              imageAsset: "assets/banner-premium.png",
-              dark: true,
-              badge: "PREMIUM",
-              title: "Shaxarlar aro",
-              subtitle: "Masofani yengib\no'ting, tez va xavfsiz!",
-              onPressed: goToServices,
+              onPressed: goToTaxiOrder,
+              onTapWhole: goToTaxiOrder,
             ),
 
-            // Xizmatlar sarlavhasi
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -75,12 +70,14 @@ class HomeScreen extends StatelessWidget {
               mainAxisSpacing: 8,
               childAspectRatio: 0.8,
               children: homeServices
-                  .map((s) => ServiceItemWidget(service: s, onTap: goToServices))
+                  .map((s) => ServiceItemWidget(
+                        service: s,
+                        onTap: s.id == "taxi" ? goToTaxiOrder : goToServices,
+                      ))
                   .toList(),
             ),
             const SizedBox(height: 8),
 
-            // Do'stlarni taklif qilish banneri
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(

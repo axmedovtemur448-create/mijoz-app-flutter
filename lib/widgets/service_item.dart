@@ -24,10 +24,11 @@ class ServiceItemWidget extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: service.color.withOpacity(0.1),
+                color: service.color.withOpacity(0.12),
                 shape: BoxShape.circle,
               ),
-              child: Icon(service.icon, color: service.color, size: 26),
+              alignment: Alignment.center,
+              child: Text(service.emoji, style: const TextStyle(fontSize: 24)),
             ),
             const SizedBox(height: 8),
             Text(

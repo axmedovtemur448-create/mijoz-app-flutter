@@ -15,10 +15,14 @@ jobs:
         with:
           channel: stable
 
-      # android/ios papkalari repo'da yo'q, shuning uchun Flutter ularni
-      # avtomatik yaratadi. Mavjud lib/ va pubspec.yaml fayllariga tegmaydi.
       - name: Create native platform folders
         run: flutter create . --platforms=android --org com.sizningkompaniya --project-name mijoz_app
+
+      - name: Add Internet & Location permissions
+        run: |
+          MANIFEST=android/app/src/main/AndroidManifest.xml
+          sed -i '/<manifest/a\    <uses-permission android:name="android.permission.INTERNET"/>\n    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>' "$MANIFEST"
+          cat "$MANIFEST"
 
       - run: flutter pub get
 

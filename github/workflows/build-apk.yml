@@ -18,11 +18,23 @@ jobs:
       - name: Create native platform folders
         run: flutter create . --platforms=android --org com.sizningkompaniya --project-name mijoz_app
 
-      - name: Add Internet & Location permissions
+      - name: Add Internet & Location permissions (ishonchli usul)
         run: |
-          MANIFEST=android/app/src/main/AndroidManifest.xml
-          sed -i '/<manifest/a\    <uses-permission android:name="android.permission.INTERNET"/>\n    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>' "$MANIFEST"
-          cat "$MANIFEST"
+          python3 << 'PYEOF'
+          import re
+          path = "android/app/src/main/AndroidManifest.xml"
+          with open(path) as f:
+              content = f.read()
+          perms = (
+              '    <uses-permission android:name="android.permission.INTERNET"/>\n'
+              '    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>\n'
+              '    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>\n'
+          )
+          content = re.sub(r'(<manifest[^>]*>)', r'\1\n' + perms, content, count=1)
+          with open(path, "w") as f:
+              f.write(content)
+          print(content)
+          PYEOF
 
       - run: flutter pub get
 

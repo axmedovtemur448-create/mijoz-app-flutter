@@ -34,7 +34,7 @@ class BannerCardWidget extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(18),
             child: AspectRatio(
-              aspectRatio: 1536 / 575,
+              aspectRatio: 1774 / 887,
               child: Image.asset(imageAsset!, fit: BoxFit.cover),
             ),
           ),

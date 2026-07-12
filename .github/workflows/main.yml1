@@ -1,0 +1,59 @@
+name: Build APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Create native platform folders
+        run: flutter create . --platforms=android --org com.sizningkompaniya --project-name mijoz_app
+
+      - name: Add Internet & Location permissions
+        run: |
+          python3 << 'PYEOF'
+          import re
+          path = "android/app/src/main/AndroidManifest.xml"
+          with open(path) as f:
+              content = f.read()
+
+          perms = (
+              '    <uses-permission android:name="android.permission.INTERNET"/>\n'
+              '    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>\n'
+              '    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>\n'
+          )
+
+          new_content = re.sub(r'(\s*<application)', '\n' + perms + r'\1', content, count=1)
+
+          if new_content == content:
+              raise SystemExit("XATO: <application> tegi topilmadi, ruxsat qo'shilmadi!")
+
+          with open(path, "w") as f:
+              f.write(new_content)
+
+          print("=== YANGILANGAN MANIFEST ===")
+          print(new_content)
+
+          if "android.permission.INTERNET" not in new_content:
+              raise SystemExit("XATO: INTERNET ruxsati qo'shilmadi!")
+          print("=== RUXSATLAR MUVAFFAQIYATLI QO'SHILDI ===")
+          PYEOF
+
+      - run: flutter pub get
+
+      - name: Build release APK
+        run: flutter build apk --release
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mijoz-app-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
